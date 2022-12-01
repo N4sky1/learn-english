@@ -1,0 +1,18 @@
+.navigation {
+    display: flex;
+    justify-content: space-between;
+}
+.navigation__links {
+    display: flex;
+    justify-content: flex-end;
+}
+.navigation__links a {
+    margin-right: 5px;
+}
+
+.learn__select-lang {
+    display: none;
+}
+.learn__study {
+    display: none;
+}
