@@ -1,18 +1,132 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+body {
+    padding: 0 20px;
+}
+.learn {
+    margin-top: 200px;
+}
 .navigation {
     display: flex;
     justify-content: space-between;
+    padding-top:15px;
 }
 .navigation__links {
     display: flex;
     justify-content: flex-end;
 }
-.navigation__links a {
-    margin-right: 5px;
+.navigation a,
+.navigation button {
+    font-size: 18px;
+    text-decoration: none;
+    color: gray;
+    margin-right: 10px;
+    transition: 0.3s;
+}
+.navigation a:hover,
+.navigation button:hover {
+    color: black;
+    cursor: pointer;
+}
+.navigation__links button {
+    background-color: inherit;
+    border: none;
+    padding: 0;
 }
 
 .learn__select-lang {
     display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.learn__select-lang button,
+.learn__select-hard button {
+    margin-bottom: 10px;
 }
 .learn__study {
     display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+.learn__study-buttons {
+    display: none;
+    margin-top: 10px;
+}
+.learn__study-show {
+    margin-top: 10px;
+}
+.learn__study-first, 
+.learn__study-second {
+    font-size: 25px;
+    min-height: 30px;
+    display: flex;
+    justify-content: center;
+}
+.learn__study-second {
+    opacity: 0;
+    transition: 0.3s;
+}
+.learn__select-hard {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.learn__study-words {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+button {
+    padding:10px 15px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    font-size: 20px;
+}
+.learn__study-no {
+    margin-left: 10px;
+}
+.download,
+.user-input {
+    margin-top: 40px;
+}
+.download__form-word {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.download__form-word div,
+.user-input div {
+    display: flex;
+    margin-bottom: 10px;
+    align-items: center;
+}
+.download__form-word label {
+    width: 240px;
+    display: flex;
+}
+.user-input label {
+    width: 120px;
+    display: flex;
+}
+.download__form-word input,
+.download__form-word textarea,
+.user-input input {
+    padding: 5px 15px;
+    border:1px solid darkgray;
+    border-radius: 5px;
+    width: 212px;
+}
+.download__form-file {
+    margin-top: 20px;
+}
+.user-input__register {
+    margin-top: 25px;
 }

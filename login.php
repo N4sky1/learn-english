@@ -90,45 +90,45 @@ if (isset($_POST['login'])) {
 }
 
 ?>
-<form method="post" action="" name="register-form">
-	<div class="form-element">
-		<label>Username</label>
-		<input type="text" name="username" pattern="[a-zA-Z0-9]+" 
-			required readonly
-			onfocus="this.removeAttribute('readonly')"
-		/>
-	</div>
-	<div class="form-element">
-		<label>Email</label>
-		<input type="email" name="email" required />
-	</div>
-	<div class="form-element">
-		<label>Password</label>
-		<input type="password" name="password" 
-			required readonly
-			onfocus="this.removeAttribute('readonly')"
-		/>
-	</div>
-	<button type="submit" name="register" value="register">Register</button>
-</form>
+<section class="user-input">
+	<form class="user-input__login" method="post" action="" name="register-form">
+		<div>
+			<label>Username</label>
+			<input type="text" name="username" pattern="[a-zA-Z0-9]+" 
+				required readonly
+				onfocus="this.removeAttribute('readonly')"
+			/>
+		</div>
+		<div>
+			<label>Email</label>
+			<input type="email" name="email" required />
+		</div>
+		<div>
+			<label>Password</label>
+			<input type="password" name="password" 
+				required readonly
+				onfocus="this.removeAttribute('readonly')"
+			/>
+		</div>
+		<button type="submit" name="register" value="register">Register</button>
+	</form>
 
-<form method="post" action="" name="login-form">
-	<div class="form-element">
-		<label>Username</label>
-		<input type="text" name="username" pattern="[a-zA-Z0-9]+" required readonly
-    onfocus="this.removeAttribute('readonly')"/>
-	</div>
-	<div class="form-element">
-		<label>Password</label>
-		<input type="password" name="password" required readonly
-    onfocus="this.removeAttribute('readonly')"/>
-	</div>
-	<button type="submit" name="login" value="login">Login</button>
-</form>
+	<form class="user-input__register" method="post" action="" name="login-form">
+		<div>
+			<label>Username</label>
+			<input type="text" name="username" pattern="[a-zA-Z0-9]+" required readonly
+		onfocus="this.removeAttribute('readonly')"/>
+		</div>
+		<div>
+			<label>Password</label>
+			<input type="password" name="password" required readonly
+		onfocus="this.removeAttribute('readonly')"/>
+		</div>
+		<button type="submit" name="login" value="login">Login</button>
+	</form>
+</section>
 
-<!--<form method="post" action="" name="exit-form">
-	<button type="submit" name="exit" value="exit">Выход</button>
-</form>-->
+
 
 <?php
 if(!isset($_SESSION['user_name'])){
