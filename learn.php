@@ -1,4 +1,5 @@
 <?php require_once 'header.php'; ?>
+<?php require_once './connect-for-users.php'; ?>
 <?php require_once './functions/no-user-go-main.php'; ?>
 <?php require_once './functions/get-words-to-learn.php'; ?>
 

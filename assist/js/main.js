@@ -53,19 +53,17 @@ function getLang(e) {
         values.secondLang = "Eng"
     }
     disableVisible([langWrap], [studyWrap])
-    sendData(values)
+    getData()
 }
 function getWord(learn) {
-    learn ? console.log("знает он") : console.log("не знает он")
+    let word = responseData[values.count-1]["Eng"]
+    //console.log(word)
+    learn ? getStrongWord("wordLite", word) : getStrongWord("wordStrong", word)
     getWordToScreen()
-    disableVisible([studyBtnWrap], [showBtn])
-    secondWord.style.transition = "all 0s ease 0s"
-    secondWord.style.opacity = "0"
+    disableVisible([studyBtnWrap, secondWord], [showBtn])
 }
 function showWord() {
-    disableVisible([showBtn], [studyBtnWrap])
-    secondWord.style.transition = "all 0.4s ease 0s"
-    secondWord.style.opacity = "1"
+    disableVisible([showBtn], [studyBtnWrap, secondWord])
 }
 function disableVisible(disable, visible) {
     function getVisibleOrDisable(elem, visible) {
@@ -82,24 +80,32 @@ function disableVisible(disable, visible) {
         elem.style.display = "none"
     }
 
-    //disable ? disable.forEach(a => a.style.display = "none") : ""
-    //visible ? visible.forEach(a => a.style.display = "flex") : ""
 
     disable ? disable.forEach(a => getVisibleOrDisable(a, false)) : ""
     visible ? visible.forEach(a => getVisibleOrDisable(a, true)) : ""
 }
 
-async function sendData(values)	{
+async function getData()	{
     let data = new FormData()
-    data.append('hard', values.hard)
+    data.append('hard', values.hard) 
     let response = await fetch('/le/functions/get-words-to-learn.php', {
       method: 'POST',
       body: data
     })
     responseData = await response.json(); 
-    getWordToScreen()
+    getWordToScreen() 
 }
 
+async function getStrongWord(strong, word)	{
+    let data = new FormData()
+    data.append(strong, word) 
+    let response = await fetch('/le/functions/get-words-to-learn.php', {
+      method: 'POST',
+      body: data
+    })
+    data = await response.json(); 
+    console.log(data)
+}
 function getWordToScreen() { 
     append(firstWord, values.lang)
     append(secondWord, values.secondLang)

@@ -1,6 +1,7 @@
 <?php if (session_status() !== PHP_SESSION_ACTIVE) {session_start();}?>
 <?php require_once './functions/logout.php'; ?>
 
+
 <?php 
 $url = ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 //echo $url;
