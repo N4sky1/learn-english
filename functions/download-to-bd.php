@@ -1,5 +1,6 @@
 <?php
-
+require_once 'connect-bd.php'; 
+require_once 'get_count_words.php';
 function get_to_bd($connection, $eng, $rus, $transcr, $comment, $example_rus, $example_eng) {
     
 
@@ -31,9 +32,13 @@ function get_to_bd($connection, $eng, $rus, $transcr, $comment, $example_rus, $e
     )); 
 
     $info = $data->errorInfo();
-    if($info) print_r($info);
+    if($info[1] > 0) {
+        print_r($info[2]);
+        return;
+    };
     echo "<p> загрузка прошла успешно</p>";
-}
+    get_count_words();
+} 
 
 function chek_data($eng, $connection) {
     $check_data = $connection->prepare("SELECT `Eng` FROM `words` WHERE `UserId` = :UserId AND `Eng` = :Eng");
@@ -41,3 +46,4 @@ function chek_data($eng, $connection) {
     $array = $check_data->fetch(PDO::FETCH_ASSOC);
     if ($array) return true;
 }
+

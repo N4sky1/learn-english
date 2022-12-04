@@ -1,4 +1,8 @@
 let hardWrap = document.querySelector('.learn__select-hard')
+//let getHardBtn = document.querySelector('.learn__select-hard__btn-hard')
+//let getLightBtn = document.querySelector('.learn__select-hard__btn-light')
+//let getAllBtn = document.querySelector('.learn__select-hard__btn-all')
+
 let langWrap = document.querySelector('.learn__select-lang')
 let studyWrap = document.querySelector('.learn__study')
 let studyYesBtn = document.querySelector('.learn__study-yes')
@@ -28,7 +32,7 @@ let values = {
     secondLang: '',
     count: 0
 }
-let responseData
+let responseData 
 
 function getHard(e) { 
     function select() {
@@ -53,12 +57,27 @@ function getLang(e) {
         values.secondLang = "Eng"
     }
     disableVisible([langWrap], [studyWrap])
-    getData()
+    //getData()
+    let fetchData = {
+        appendName: 'hard',
+        appendValue: values.hard,
+        url: '/le/functions/get-words-to-learn.php',
+        method: 'POST',
+        getData: (data)=> {
+            responseData = data
+        },
+        endFunction:()=> {
+            getWordToScreen()
+            getCountWords(values.count, responseData.length)
+        } 
+    }
+    
+    getFetch(fetchData)
 }
 function getWord(learn) {
+    if(values.count === responseData.length) {alert("слова закончились")}
     let word = responseData[values.count-1]["Eng"]
-    //console.log(word)
-    learn ? getStrongWord("wordLite", word) : getStrongWord("wordStrong", word)
+    learn ? updateStrongWord("wordLite", word) : updateStrongWord("wordStrong", word)
     getWordToScreen()
     disableVisible([studyBtnWrap, secondWord], [showBtn])
 }
@@ -85,26 +104,25 @@ function disableVisible(disable, visible) {
     visible ? visible.forEach(a => getVisibleOrDisable(a, true)) : ""
 }
 
-async function getData()	{
-    let data = new FormData()
-    data.append('hard', values.hard) 
-    let response = await fetch('/le/functions/get-words-to-learn.php', {
-      method: 'POST',
-      body: data
-    })
-    responseData = await response.json(); 
-    getWordToScreen() 
+async function updateStrongWord(strong, word)	{
+    let fetchData = {
+        appendName: strong,
+        appendValue: word,
+        url: '/le/functions/get-words-to-learn.php',
+        method: 'POST',
+    }
+    getFetch(fetchData)
+    
 }
-
-async function getStrongWord(strong, word)	{
+async function getFetch(fetchData) {
     let data = new FormData()
-    data.append(strong, word) 
-    let response = await fetch('/le/functions/get-words-to-learn.php', {
-      method: 'POST',
+    data.append(fetchData.appendName, fetchData.appendValue) 
+    let response = await fetch(fetchData.url, {
+      method: fetchData.method,
       body: data
     })
-    data = await response.json(); 
-    console.log(data)
+    if (fetchData.getData) fetchData.getData(await response.json())
+    if (fetchData.endFunction) fetchData.endFunction()
 }
 function getWordToScreen() { 
     append(firstWord, values.lang)
@@ -114,5 +132,28 @@ function getWordToScreen() {
     }
     // нужно реализовать конец списка
     values.count++
+    getCountWords(values.count, responseData.length)
+}
+function getCountWords(count, all) {
+    let place = document.querySelector('.learn__study-count')
+    place.innerHTML = ''
+    let div = document.createElement('div')
+    div.innerHTML = `${count} из ${all}`
+    place.append(div)
 }
 
+/*
+цифры возле кнопок учить *** yes ***
+дисайбл кнопок если там 0
+при учении показывать сколько прошло из всех *** yes ***
+добавить в учении комент, транскрипцию и пример
+возможность изменять их при учении
+в лк добавить список слов с поиском, ранжировкои и зменением
+в лк добавить прогресс, дату начала, среднее количество слов в день и тд
+в лк сколько выучено сегодня, по дням в месяц и тд
+на главную добавить инфу о том что есть в сайте
+в загрузках добавить ссылку на таблицу
+сделать стили переключения загрузки и логина регистрации
+
+
+*/

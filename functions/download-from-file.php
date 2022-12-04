@@ -1,6 +1,6 @@
 <?php 
 require_once './functions/download-to-bd.php'; 
-require_once('./connect-for-users.php'); // передаем $connection
+require_once('connect-for-users.php'); // передаем $connection
 
 
 if (isset($_POST['download-word'])) {

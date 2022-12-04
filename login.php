@@ -3,90 +3,68 @@
 if (session_status() !== PHP_SESSION_ACTIVE) {session_start();}if (session_status() !== PHP_SESSION_ACTIVE) {session_start();}
 
 
+require_once('./functions/connect-bd.php');
+require_once('./functions/connect-for-users.php'); // передаем $connection
 
-require_once('connect-for-users.php'); // передаем $connection
-
-
-function check_mail($connection, $email) {
-	$query = $connection->prepare("SELECT * FROM user WHERE email=:email");
-	$query->bindParam("email", $email, PDO::PARAM_STR);
-	$query->execute();
-	if ($query->rowCount() > 0) {
-		return 1; // почта уже есть в бд
-	} 
-	if ($query->rowCount() == 0) {
-		return 0;
-	}
+function goLkPage() {
+	header('Location: '.'http://localhost/le/lk.php');
 }
-function check_name($connection, $username) {
-	$query = $connection->prepare("SELECT * FROM user WHERE username=:username");
-	$query->bindParam("username", $username, PDO::PARAM_STR);
-	$query->execute();
-	if ($query->rowCount() > 0) {
-		return 1; // почта уже есть в бд
-	} 
-	if ($query->rowCount() == 0) {
-		return 0;
-	}
+function check_data($data, $where) {
+	$request = "SELECT * FROM user WHERE ".$where." = ?";
+    $execute = array($data);
+    $array = connect_bd($request, $execute, false);
+	if ($array) return 1;
+	return 0;
 }
 
-function register($connection) {	
+function register() {	
 	$username = $_POST['username'];
 	$email = $_POST['email'];
 	$password = $_POST['password'];
 	$password_hash = password_hash($password, PASSWORD_BCRYPT);
-	if(check_name($connection, $username)) {
+	if(check_data($username, 'username')) {
 		echo('<p class="error">Этот имя уже зарегистрировано!</p>');
 		return;
 	}
-	if(check_mail($connection, $email)) {
+	if(check_data($email, 'email')) {
 		echo('<p class="error">Этот адрес уже зарегистрирован!</p>');
 		return;
 	}
-	$query = $connection->prepare("INSERT INTO user(username,password,email) VALUES (:username,:password_hash,:email)");
-	$query->bindParam("username", $username, PDO::PARAM_STR);
-	$query->bindParam("password_hash", $password_hash, PDO::PARAM_STR);
-	$query->bindParam("email", $email, PDO::PARAM_STR);
-	$result = $query->execute();
-	if ($result) {
-		echo '<p class="success">Регистрация прошла успешно! через 5 секунд вы будете перенаправлены в личный кабинет</p>';
+	$request = "INSERT INTO user(username,password,email) VALUES (:username,:password_hash,:email)";
+	$execute = array('username' => $username, 'password_hash' => $password_hash, 'email' => $email);
+	$array = connect_bd($request, $execute, false);
+	if ($array) {
 		$_SESSION['user_name'] = $username;
 		goLkPage();
 	} else {
 		echo '<p class="error">Неверные данные!</p>';
 	}
 }
-
-
-if (isset($_POST['register'])) {
-	register($connection);
-}
-
-function goLkPage() {
-	header('Location: '.'http://localhost/le/lk.php');
-}
-// login form
-
-//session_start();
-//include('connect-for-users.php');
-if (isset($_POST['login'])) {
+function login() {
 	$username = $_POST['username'];
 	$password = $_POST['password'];
-	$query = $connection->prepare("SELECT * FROM user WHERE username=:username");
-	$query->bindParam("username", $username, PDO::PARAM_STR);
-	$query->execute();
-	$result = $query->fetch(PDO::FETCH_ASSOC);
-	if (!$result) {
-		echo '<p class="error">Неверные пароль или имя пользователя!</p>';
-	} else {
-		if (password_verify($password, $result['password'])) {
-			$_SESSION['user_name'] = $result['username'];
-			$_SESSION['user_id'] = $result['id'];
-			goLkPage();
-		} else {
-			echo '<p class="error"> Неверные пароль или имя пользователя!</p>';
-		}
+	$request = "SELECT * FROM user WHERE username=?";
+	$execute = array($username);
+	$array = connect_bd($request, $execute, false);
+	$error = '<p class="error">Неверные пароль или имя пользователя!</p>';
+	if (!$array) {
+		echo $error;
+		return;
 	}
+	if (password_verify($password, $array[0]['password'])) {
+		$_SESSION['user_name'] = $array[0]['username'];
+		$_SESSION['user_id'] = $array[0]['id'];
+		goLkPage();
+	} else {
+		echo $error;
+	}
+}
+
+if (isset($_POST['register'])) {
+	register();
+}
+if (isset($_POST['login'])) {
+	login();
 }
 
 ?>
@@ -129,16 +107,5 @@ if (isset($_POST['login'])) {
 </section>
 
 
-
-<?php
-if(!isset($_SESSION['user_name'])){
-	//header('Location: login.php');
-	//exit;
-	echo("вы не зарегистрированы");
-} else {
-	echo("вы зарегистрированы");
-	echo " - ";
-	echo($_SESSION['user_name']);
-}?>
 
 <?php require_once 'footer.php'; ?>

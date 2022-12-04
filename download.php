@@ -6,11 +6,11 @@
 	<form class="download__form-word" method="post"  name="download-form">
 		<div>
 			<label>Русское слово</label>
-			<input type="text" name="rus" pattern="[А-Яа-яЁё]+" required />
+			<input type="text" name="rus" pattern="[А-Яа-яЁё\s]+" required />
 		</div>
 		<div>
 			<label>Английское слово</label>
-			<input type="text" name="eng" pattern="[A-Za-z]+" required />
+			<input type="text" name="eng" pattern="[A-Za-z\s]+" required />
 		</div>
 		<div>
 			<label>Транскрипция</label>
